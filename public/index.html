@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+	<style>
+		.progress {
+		  width: 100%;
+		  height: 20px;
+		}
+
+		.progress-wrap {
+		  background: #ADD8E6;
+		  overflow: hidden;
+		  position: relative;
+		}
+
+		.progress-bar {
+		  background: #ddd;
+		  overflow: hidden;
+		  left: 0;
+		  position: absolute;
+		  top: 0;
+		}
+		
+		.btn-group button {
+			background-color: #4CAF50; /* Green background */
+			border: 1px solid green; /* Green border */
+			color: white; /* White text */
+			padding: 10px 24px; /* Some padding */
+			cursor: pointer; /* Pointer/hand icon */
+			float: left; /* Float the buttons side by side */
+		}
+
+		.btn-group button:not(:last-child) {
+			border-right: none; /* Prevent double borders */
+		}
+
+		/* Clear floats (clearfix hack) */
+		.btn-group:after {
+			content: "";
+			clear: both;
+			display: table;
+		}
+
+		/* Add a background color on hover */
+		.btn-group button:hover {
+			background-color: #3e8e41;
+		}
+
+		.progress-percentage {
+			text-align: center;
+			margin-top: -18px;
+            overflow: visible;
+            position: relative;
+		}
+		.progress-text {
+		
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="progress-wrap progress">
+	  <div class="progress-bar progress"></div>
+	</div>
+	<div id="progress" class="progress-percentage">
+	
+	</div>
+	<div class="btn-group">
+	  <button class="btn-1">-25</button>
+	  <button class="btn-2">+25</button>
+	</div>
+</body>
+
+<script>
+	var progress = 25;
+
+	var wrapper_elt = document.querySelector('.progress-wrap');
+	var progress_elt = document.querySelector('.progress-bar');
+
+	//resize
+	var width = wrapper_elt.getBoundingClientRect().width;
+
+	var update = function(progress) {
+	  var percent = progress / 100;
+	  var total = percent * width;
+	  
+	  progress_elt.style.left = Math.floor(total)+'px';
+	};
+	
+	document.getElementById('progress').innerHTML = '<span class="progress-text">' + progress + '%</span>';
+	update(progress);
+
+	document.querySelector('.btn-1').addEventListener('click', function () {
+	    progress = progress - 25;
+		if(progress < -1) {
+			progress = 0;
+		}
+		document.getElementById('progress').innerHTML = '<span class="progress-text">' + progress + '%</span>';
+
+		update(progress);
+	});
+
+	document.querySelector('.btn-2').addEventListener('click', function () {
+	    progress = progress + 25;
+		document.getElementById('progress').innerHTML = '<span class="progress-text">' + progress + '%</span>';
+		update(progress);
+	});
+
+</script>
+
+</html>
