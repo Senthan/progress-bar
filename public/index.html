@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     
+	
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css"/>
+	
 	<style>
 		.progress {
 		  width: 100%;
@@ -15,6 +18,15 @@
 		}
 
 		.progress-bar {
+		  background: #ddd;
+		  overflow: hidden;
+		  left: 0;
+		  position: absolute;
+		  top: 0;
+		}
+		
+		
+		.progress2-bar {
 		  background: #ddd;
 		  overflow: hidden;
 		  left: 0;
@@ -56,56 +68,189 @@
 		.progress-text {
 		
 		}
+		
+		.column {
+			float: left;
+			padding: 15px;
+		}
+		.clearfix::after {
+			content: "";
+			clear: both;
+			display: table;
+		}
+		.menu {
+			width: 25%;
+		}
+		.content {
+			width: 75%;
+		}
+			
+		.styled-select {
+		   height: 29px;
+		   overflow: hidden;
+		}
+
+		.styled-select select {
+		   background: transparent;
+		   border: none;
+		   font-size: 14px;
+		   height: 29px;
+		   padding: 5px; /* If you add too much padding here, the options won't show in IE */
+		}
+
+		.styled-select {
+		   height: 34px;
+           margin-bottom: 22px;
+		}
+
+		.styled-select select {
+		   border: 1px solid #ccc;
+		   font-size: 16px;
+		   height: 34px;
+		   width: 268px;
+		}
+
+		.semi-square {
+		   -webkit-border-radius: 5px;
+		   -moz-border-radius: 5px;
+		   border-radius: 5px;
+		}
+			
 	</style>
 </head>
 
 <body>
 
-	<div class="progress-wrap progress">
-	  <div class="progress-bar progress"></div>
+    <div class="container-fluid">
+		<section class="content">
+            <div class="ui segments">
+                <div class="ui green segment">
+                
+                    <div class="progress-wrap progress progress-wrap-color">
+					  <div class="progress-bar progress"></div>
+					</div>
+					<div id="progress" class="progress-percentage">
+					
+					</div>
+					<br/>
+					
+                    <div class="progress-wrap progress progress2-wrap-color">
+					  <div class="progress2-bar progress"></div>
+					</div>
+					<div id="progress2" class="progress-percentage">
+					
+					</div>
+					<br/>
+					<select id="select" class="styled-select semi-square">
+						  <option>progress1</option>
+						  <option>progress2</option>
+						</select>
+						
+					<br/>
+					<div class="btn-group">
+						  <button class="btn-1">-25</button>
+						  <button class="btn-2">+25</button>
+						</div>
+
+
+					
+                </div>
+            </div>
+    </section>
 	</div>
-	<div id="progress" class="progress-percentage">
 	
-	</div>
-	<div class="btn-group">
-	  <button class="btn-1">-25</button>
-	  <button class="btn-2">+25</button>
-	</div>
 </body>
 
 <script>
 	var progress = 25;
+	var progress2 = 50;
 
 	var wrapper_elt = document.querySelector('.progress-wrap');
 	var progress_elt = document.querySelector('.progress-bar');
+	var progress2_elt = document.querySelector('.progress2-bar');
+	var  progress_wrap_color = document.querySelector('.progress-wrap-color');
+	var  progress2_wrap_color = document.querySelector('.progress2-wrap-color');
 
 	//resize
 	var width = wrapper_elt.getBoundingClientRect().width;
 
-	var update = function(progress) {
+	var update = function(progress, type) {
 	  var percent = progress / 100;
 	  var total = percent * width;
-	  
-	  progress_elt.style.left = Math.floor(total)+'px';
+	  if(type == 'progress2') {
+		progress2_elt.style.left = Math.floor(total)+'px';
+	  } else {
+		progress_elt.style.left = Math.floor(total)+'px';
+	  }
 	};
 	
 	document.getElementById('progress').innerHTML = '<span class="progress-text">' + progress + '%</span>';
-	update(progress);
+	document.getElementById('progress2').innerHTML = '<span class="progress2-text">' + progress2 + '%</span>';
+	
+	update(progress, '');
+	update(progress2, 'progress2');
 
 	document.querySelector('.btn-1').addEventListener('click', function () {
-	    progress = progress - 25;
-		if(progress < -1) {
-			progress = 0;
-		}
-		document.getElementById('progress').innerHTML = '<span class="progress-text">' + progress + '%</span>';
+	    var select = document.getElementById('select');
 
-		update(progress);
+		if(select.value == 'progress2') {
+			progress2 = progress2 - 25;
+			if(progress2 < -1) {
+				progress2 = 0;
+			}
+			
+			if(progress2 < 101) {
+		       progress2_wrap_color.style.background = '#ADD8E6';
+			}
+			
+		    document.getElementById('progress2').innerHTML = '<span class="progress2-text">' + progress2 + '%</span>';
+			update(progress2, 'progress2');
+		} else {
+			progress = progress - 25;
+			if(progress < -1) {
+				progress = 0;
+			}
+						
+			if(progress < 101) {
+		       progress_wrap_color.style.background = '#ADD8E6';
+			}
+			
+		    document.getElementById('progress').innerHTML = '<span class="progress-text">' + progress + '%</span>';
+			update(progress, 'progress');
+        }
 	});
+	
 
 	document.querySelector('.btn-2').addEventListener('click', function () {
-	    progress = progress + 25;
-		document.getElementById('progress').innerHTML = '<span class="progress-text">' + progress + '%</span>';
-		update(progress);
+	    var select = document.getElementById('select');
+		if(select.value == 'progress2') {
+			progress2 = progress2 + 25;
+			if(progress2 > 100) {
+		       progress2_wrap_color.style.background = 'red';
+			} else {
+		       progress2_wrap_color.style.background = '#ADD8E6';
+			}
+			
+			if(progress2 > 250) {
+				progress2 = 250;
+			}
+		    document.getElementById('progress2').innerHTML = '<span class="progress2-text">' + progress2 + '%</span>';
+			update(progress2, 'progress2');
+		} else {
+			progress = progress + 25;
+			if(progress > 100) {
+		       progress_wrap_color.style.background = 'red';
+			} else {
+		       progress_wrap_color.style.background = '#ADD8E6';
+			}
+						
+			if(progress > 250) {
+				progress = 250;
+			}
+			
+		    document.getElementById('progress').innerHTML = '<span class="progress-text">' + progress + '%</span>';
+			update(progress, 'progress');
+        }
 	});
 
 </script>
